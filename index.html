@@ -135,7 +135,7 @@ textarea{resize:none;}
 .sc-field{font-size:12px;color:var(--sub);margin-bottom:3px;}
 /* STATUS CHIPS */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
-.chip{font-size:11px;font-weight:700;padding:5px 10px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s;user-select:none;}
+.chip{font-size:13px;font-weight:700;padding:8px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s;user-select:none;}
 .chip.on{background:var(--gbg);color:var(--green);border-color:#16a87a55;}
 
 /* SHIPMENTS TOOLBAR */
@@ -164,11 +164,11 @@ textarea{resize:none;}
 .finp:focus{border-color:var(--green);}
 .fta{height:66px;}
 .dpick{display:flex;gap:5px;flex-wrap:wrap;}
-.dtog{padding:7px 9px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:12px;font-weight:700;flex:1 0 auto;min-width:42px;text-align:center;}
+.dtog{padding:7px 9px;border-radius:8px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);font-size:13px;font-weight:700;flex:1 0 auto;min-width:42px;text-align:center;}
 .rpick{display:flex;gap:8px;}
-.rtog{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:12px;font-weight:700;}
+.rtog{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:700;}
 .chan-pick{display:flex;gap:8px;}
-.ctog{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:14px;font-weight:800;text-align:center;}
+.ctog{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:700;text-align:center;}
 .ctog.w-on{border-color:#16a87a;background:var(--gbg);color:var(--green);}
 .ctog.m-on{border-color:#3b82f6;background:#eff6ff;color:#3b82f6;}
 #sbtn{padding:14px;border-radius:12px;font-size:15px;font-weight:800;color:#fff;margin-top:2px;}
@@ -229,7 +229,7 @@ textarea{resize:none;}
 <div id="toast"></div>
 <div id="fab">+</div>
 
-<div id="cfov"><div id="cfbox"><p id="cfmsg"></p><div id="cfbtns"><button id="cfyes">Sì, elimina</button><button id="cfno">Annulla</button></div></div></div>
+<div id="cfov"><div id="cfbox"><p id="cfmsg"></p><div id="cfbtns"><button id="cfyes">Sì</button><button id="cfno">Annulla</button></div></div></div>
 
 <!-- OVERLAY -->
 <div id="ov">
@@ -239,12 +239,15 @@ textarea{resize:none;}
     <div class="mhead"><span class="mtitle" id="omtit">Nuovo Ordine</span><button class="mclose" id="omcl">✕</button></div>
     <div class="mbody">
       <div class="fg"><label class="flbl">Giorno di consegna</label><div class="dpick" id="dpick"></div></div>
-      <div class="fg" id="repgrp" style="display:none"><label class="flbl">Rappresentante</label><div class="rpick" id="rpick"></div></div>
-      <div class="fg"><label class="flbl">🏪 Nome Locale *</label><input class="finp" id="floc" placeholder="es. Bar Milano…"></div>
-      <div class="fg"><label class="flbl">📍 Luogo Consegna *</label><input class="finp" id="fluo" placeholder="es. Via Roma 12, Venezia"></div>
-      <div class="fg"><label class="flbl">📦 Merce e Quantità *</label><textarea class="finp fta" id="fmer" placeholder="es. 3 cassette birra…"></textarea></div>
-      <div class="fg"><label class="flbl">🔒 Tipologia Sigilli</label><input class="finp" id="fsig" placeholder="es. Sigillo oro…"></div>
-      <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="fnot" placeholder="Informazioni utili…"></textarea></div>
+      <div class="fg" id="repgrp" style="display:none"><label class="flbl">Azienda</label><div class="rpick" id="rpick"></div></div>
+      <div class="fg"><label class="flbl">🏪 Nome Locale</label><input class="finp" id="floc" placeholder=""></div>
+      <div class="fg"><label class="flbl">📍 Luogo Consegna</label><input class="finp" id="fluo" placeholder=""></div>
+      <div class="fg"><label class="flbl">📦 Articoli</label><textarea class="finp fta" id="fmer" placeholder=""></textarea></div>
+      <div class="fg">
+        <label class="flbl">🔒 Sigilli</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="osig-pick"></div>
+      </div>
+      <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="fnot" placeholder=""></textarea></div>
       <button id="sbtn">Salva Ordine</button>
     </div>
   </div>
@@ -254,28 +257,34 @@ textarea{resize:none;}
     <div class="mh"></div>
     <div class="mhead"><span class="mtitle" id="smtit">Nuova Spedizione</span><button class="mclose" id="smcl">✕</button></div>
     <div class="mbody">
-      <div class="fg" id="srepgrp" style="display:none"><label class="flbl">Rappresentante</label><div class="rpick" id="srpick"></div></div>
-      <div class="fg"><label class="flbl">🏪 Nome Locale *</label><input class="finp" id="sloc" placeholder="es. Bar Milano…"></div>
+      <div class="fg" id="srepgrp" style="display:none"><label class="flbl">Azienda</label><div class="rpick" id="srpick"></div></div>
+      <div class="fg"><label class="flbl">🏪 Nome Locale</label><input class="finp" id="sloc" placeholder=""></div>
       <div class="fg">
-        <label class="flbl">📨 Canale ricezione</label>
+        <label class="flbl">📨 Canale</label>
         <div class="chan-pick">
-          <button class="ctog" id="ctog-w" data-chan="W">📱 WhatsApp</button>
-          <button class="ctog" id="ctog-m" data-chan="M">✉️ Mail</button>
+          <button class="ctog" id="ctog-w" data-chan="W">📱 W</button>
+          <button class="ctog" id="ctog-m" data-chan="M">✉️ M</button>
         </div>
       </div>
-      <div class="fg"><label class="flbl">📦 Merce e Quantità *</label><textarea class="finp fta" id="smer" placeholder="es. 3 cassette birra…"></textarea></div>
-      <div class="fg"><label class="flbl">🔒 Tipologia Sigilli</label><input class="finp" id="ssig" placeholder="es. Sigillo oro…"></div>
-      <div class="fg"><label class="flbl">💳 Tipo Pagamento</label><input class="finp" id="spag" placeholder="es. Bonifico, Contrassegno…"></div>
-      <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="snot" placeholder="Informazioni utili…"></textarea></div>
+      <div class="fg"><label class="flbl">📦 Articoli</label><textarea class="finp fta" id="smer" placeholder=""></textarea></div>
+      <div class="fg">
+        <label class="flbl">🔒 Sigilli</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="ssig-pick"></div>
+      </div>
+      <div class="fg">
+        <label class="flbl">💳 Pagamento</label>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;" id="spag-pick"></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;" id="spag-extra"></div>
+      </div>
+
       <div class="fg">
         <label class="flbl">📋 Stato spedizione</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="status-chips-form">
-          <button class="chip" id="fchip-proforma" data-field="proforma">Proforma</button>
-          <button class="chip" id="fchip-fattura"  data-field="fattura">Fattura</button>
-          <button class="chip" id="fchip-pagato"   data-field="pagato">Pagato</button>
-          <button class="chip" id="fchip-gls"      data-field="gls">GLS</button>
-          <button class="chip" id="fchip-pacco"    data-field="pacco">Pacco pronto</button>
-          <button class="chip" id="fchip-spedito"  data-field="spedito">Spedito</button>
+          <button class="chip" id="fchip-avviso"    data-field="avviso">Avviso</button>
+          <button class="chip" id="fchip-pagato"    data-field="pagato">Pagato</button>
+          <button class="chip" id="fchip-etichetta" data-field="etichetta">Etichetta</button>
+          <button class="chip" id="fchip-pacco"     data-field="pacco">Pronto</button>
+          <button class="chip" id="fchip-spedito"   data-field="spedito">Spedito</button>
         </div>
       </div>
       <button id="ssbtn" style="padding:14px;border-radius:12px;font-size:15px;font-weight:800;color:#fff;margin-top:2px;width:100%;">Salva Spedizione</button>
@@ -308,7 +317,8 @@ textarea{resize:none;}
 <div id="app">
   <div id="hdr">
     <div id="hleft"><button id="back">‹</button><div><div id="htitle">DeliverySync</div><div id="hsub"></div></div></div>
-    <div id="hright"><span id="enc">🔐 AES-256</span><div id="upill"></div><button class="hb" id="logbtn">↩</button></div>
+    <div id="hright"><span id="enc">🔐 AES-256</span>
+      <button id="reset-all-btn" title="Azzera tutti gli ordini" style="font-size:11px;font-weight:700;color:var(--red);padding:3px 8px;border-radius:8px;background:var(--surface2);border:1.5px solid #fca5a5;cursor:pointer;line-height:1;">🗑</button><div id="upill"></div><button class="hb" id="logbtn">↩</button></div>
   </div>
   <div id="conn"></div>
   <div id="main">
@@ -324,7 +334,14 @@ textarea{resize:none;}
         <div class="sdiv"></div>
         <div class="scell"><span class="sn" id="sj" style="color:var(--violet)">0</span><span class="sl">JP Empire</span></div>
       </div>
-      <div id="wlbl">Settimana corrente</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:16px 0 10px;">
+        <button id="week-prev" style="font-size:22px;font-weight:300;color:var(--muted);padding:4px 8px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border);">‹</button>
+        <div style="text-align:center;flex:1;margin:0 8px;">
+          <div id="week-range" style="font-size:13px;font-weight:700;color:var(--text);"></div>
+          <div id="week-badge" style="font-size:10px;font-weight:700;color:var(--green);letter-spacing:.5px;margin-top:2px;"></div>
+        </div>
+        <button id="week-next" style="font-size:22px;font-weight:300;color:var(--muted);padding:4px 8px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border);">›</button>
+      </div>
       <div id="dlist"></div>
     </div>
 
@@ -395,16 +412,18 @@ var USERS = {
   JP_EMPIRE: {id:'JP_EMPIRE', label:'JP Empire', color:'#7c5cdb',bg:'#f0ecfc',emoji:'🟣'}
 };
 var SHIP_FIELDS = [
-  {k:'proforma',  l:'Proforma'},
-  {k:'fattura',   l:'Fattura'},
+  {k:'avviso',    l:'Avviso'},
   {k:'pagato',    l:'Pagato'},
-  {k:'gls',       l:'GLS'},
-  {k:'pacco',     l:'Pacco pronto'},
+  {k:'etichetta', l:'Etichetta'},
+  {k:'pacco',     l:'Pronto'},
   {k:'spedito',   l:'Spedito'}
 ];
+var PAG_EXTRA = [{k:'proforma', l:'Proforma'}, {k:'fattura', l:'Fattura'}];
+var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €'];
+var PAG_OPTS     = ['Bonifico', 'Contrassegno', 'Paypal'];
 var SK = 'ds_cpw';
 
-var S = {uid:null, orders:[], shipments:[], day:null, tab:'home'};
+var S = {uid:null, orders:[], shipments:[], day:null, tab:'home', week:null};
 var CKEY = null;
 var unsub1 = null, unsub2 = null;
 var selMode = false, selIds = {};
@@ -467,18 +486,21 @@ function decFields(id,d,fields,cb){
 }
 
 var ORDER_TEXT_FIELDS = ['locale','luogo','merce','sigilli','note','day','userId'];
-var SHIP_TEXT_FIELDS  = ['locale','canale','merce','sigilli','pagamento','note','userId'];
+var SHIP_TEXT_FIELDS  = ['locale','canale','merce','sigilli','pagamento','userId'];
 
 function encOrder(o,cb){
   encFields(o,ORDER_TEXT_FIELDS,{
     createdAt:o.createdAt||new Date().toISOString(),
-    updatedAt:o.updatedAt||null,v:2
+    updatedAt:o.updatedAt||null,
+    weekKey:o.weekKey||currentWeekKey(),
+    v:2
   },cb);
 }
 function decOrder(id,d,cb){
   decFields(id,d,ORDER_TEXT_FIELDS,function(err,r){
     if(err){cb(err,null);return;}
     r.createdAt=d.createdAt; r.updatedAt=d.updatedAt;
+    r.weekKey=d.weekKey||null; // weekKey not encrypted
     cb(null,r);
   });
 }
@@ -549,7 +571,72 @@ function setConn(ok){
   else{c.className='off';c.style.display='block';c.textContent='⚠ Offline…';}
 }
 function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function buildChipPicker(containerId, opts, currentVal, accentColor, accentBg, onSelect) {
+  var container = document.getElementById(containerId);
+  if (!container) return;
+  container.innerHTML = '';
+  var sel = currentVal || null;
+  opts.forEach(function(opt) {
+    var btn = document.createElement('button');
+    var isOn = sel === opt;
+    btn.className = 'chip' + (isOn ? ' on' : '');
+    if (isOn) { btn.style.background=accentBg; btn.style.color=accentColor; btn.style.borderColor=accentColor+'55'; }
+    btn.textContent = opt + (isOn ? ' ✓' : '');
+    btn.addEventListener('click', function() {
+      sel = (sel === opt) ? null : opt; // toggle
+      onSelect(sel);
+      buildChipPicker(containerId, opts, sel, accentColor, accentBg, onSelect);
+    });
+    container.appendChild(btn);
+  });
+}
 function hideLoader(){document.getElementById('loader').style.display='none';}
+
+// ── WEEK HELPERS ──────────────────────────────────────────────────────────────
+function getWeekKey(date) {
+  // Returns "YYYY-WNN" based on Monday-start week
+  var d = new Date(date);
+  d.setHours(0,0,0,0);
+  // Set to nearest Monday
+  var day = d.getDay() || 7;
+  d.setDate(d.getDate() - day + 1);
+  var year = d.getFullYear();
+  var start = new Date(year, 0, 1);
+  var week = Math.ceil(((d - start) / 86400000 + start.getDay() + 1) / 7);
+  return year + '-W' + String(week).padStart(2,'0');
+}
+
+function getWeekStart(weekKey) {
+  // Returns Monday Date for a given weekKey
+  var parts = weekKey.split('-W');
+  var year = parseInt(parts[0]);
+  var week = parseInt(parts[1]);
+  var jan1 = new Date(year, 0, 1);
+  var jan1Day = jan1.getDay() || 7;
+  var mondayOffset = (jan1Day <= 4) ? (1 - jan1Day) : (8 - jan1Day);
+  var firstMonday = new Date(year, 0, 1 + mondayOffset);
+  var monday = new Date(firstMonday);
+  monday.setDate(firstMonday.getDate() + (week - 1) * 7);
+  return monday;
+}
+
+function weekKeyOffset(weekKey, offset) {
+  var monday = getWeekStart(weekKey);
+  monday.setDate(monday.getDate() + offset * 7);
+  return getWeekKey(monday);
+}
+
+function formatWeekRange(weekKey) {
+  var monday = getWeekStart(weekKey);
+  var sunday = new Date(monday); sunday.setDate(monday.getDate() + 6);
+  var months = ['Gen','Feb','Mar','Apr','Mag','Giu','Lug','Ago','Set','Ott','Nov','Dic'];
+  var mStart = monday.getDate()+' '+months[monday.getMonth()];
+  var mEnd   = sunday.getDate()+' '+months[sunday.getMonth()]+' '+sunday.getFullYear();
+  return mStart+' – '+mEnd;
+}
+
+function currentWeekKey() { return getWeekKey(new Date()); }
 
 // ── SCREENS ───────────────────────────────────────────────────────────────
 function showLogin(){
@@ -580,6 +667,7 @@ function showApp(uid){
   p.textContent=u.emoji+' '+u.label;
   p.style.cssText='color:'+u.color+';background:'+u.bg+';border:1px solid '+u.color+'44;font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;';
   document.getElementById('fab').style.background=u.color;
+  S.week = currentWeekKey();
   switchTab('home');
 }
 
@@ -588,6 +676,7 @@ function switchTab(tab){
   document.querySelectorAll('.bnavbtn').forEach(function(b){b.classList.remove('active');});
   document.getElementById('bnav-'+tab).classList.add('active');
   document.getElementById('bnav').classList.add('show'); // mostra sempre bottom nav nelle tab principali
+  if(tab==='home' && !S.week) S.week = currentWeekKey();
   if(tab==='home'){
     showScr('home');
     document.getElementById('back').style.display='none';
@@ -614,7 +703,7 @@ function showScr(id){
 }
 
 function openDay(dayKey){
-  S.day=dayKey; selMode=false; selIds={};
+  S.day=dayKey; S.dayWeek=S.week; selMode=false; selIds={};
   document.getElementById('selbar').style.display='none';
   document.getElementById('back').style.display='block';
   document.getElementById('fab').classList.add('show');
@@ -664,11 +753,19 @@ function startListen(){
 
 // ── HOME ──────────────────────────────────────────────────────────────────
 function renderHome(){
-  var o=S.orders,sh=S.shipments;
-  document.getElementById('st').textContent=o.length;
+  var wk = S.week || currentWeekKey();
+  var o  = S.orders.filter(function(x){ return (x.weekKey||currentWeekKey()) === wk; });
+  var sh = S.shipments;
+  // Update week navigation UI
+  document.getElementById('week-range').textContent = formatWeekRange(wk);
+  var isCurrent = wk === currentWeekKey();
+  document.getElementById('week-badge').textContent = isCurrent ? '● Settimana corrente' : '';
+  // Summary conta TUTTI gli ordini di tutte le settimane
+  var allO = S.orders;
+  document.getElementById('st').textContent=allO.length;
   document.getElementById('ss').textContent=sh.length;
-  document.getElementById('sf').textContent=o.filter(function(x){return x.userId==='FRAMEZZINO';}).length+sh.filter(function(x){return x.userId==='FRAMEZZINO';}).length;
-  document.getElementById('sj').textContent=o.filter(function(x){return x.userId==='JP_EMPIRE';}).length+sh.filter(function(x){return x.userId==='JP_EMPIRE';}).length;
+  document.getElementById('sf').textContent=allO.filter(function(x){return x.userId==='FRAMEZZINO';}).length+sh.filter(function(x){return x.userId==='FRAMEZZINO';}).length;
+  document.getElementById('sj').textContent=allO.filter(function(x){return x.userId==='JP_EMPIRE';}).length+sh.filter(function(x){return x.userId==='JP_EMPIRE';}).length;
   var list=document.getElementById('dlist');list.innerHTML='';
   var me=USERS[S.uid],other=USERS[S.uid==='FRAMEZZINO'?'JP_EMPIRE':'FRAMEZZINO'];
   DAYS.forEach(function(d){
@@ -684,12 +781,13 @@ function renderHome(){
     list.appendChild(row);
   });
   list.querySelectorAll('.dcard').forEach(function(b){b.addEventListener('click',function(){openDay(b.dataset.k);});});
-  list.querySelectorAll('.qadd').forEach(function(b){b.addEventListener('click',function(){openOrderModal(null,b.dataset.k);});});
+  list.querySelectorAll('.qadd').forEach(function(b){b.addEventListener('click',function(){S.dayWeek=S.week;openOrderModal(null,b.dataset.k);});});
 }
 
 // ── DAY ───────────────────────────────────────────────────────────────────
 function renderDay(){
-  var sorted=S.orders.filter(function(o){return o.day===S.day;}).sort(function(a,b){return (a.luogo||'').localeCompare(b.luogo||'','it');});
+  var dayWk = S.dayWeek || currentWeekKey();
+  var sorted=S.orders.filter(function(o){return o.day===S.day && (o.weekKey||currentWeekKey())===dayWk;}).sort(function(a,b){return (a.luogo||'').localeCompare(b.luogo||'','it');});
   document.getElementById('dtlbl').textContent=sorted.length+' ordini · A→Z per luogo';
   document.getElementById('sellbl').textContent=Object.keys(selIds).length+' selezionati';
   var list=document.getElementById('olist');list.innerHTML='';
@@ -718,7 +816,7 @@ function renderShipments(){
   ships.forEach(function(s){
     var u=USERS[s.userId]||USERS.FRAMEZZINO;
     var card=document.createElement('div');card.className='sc';card.style.borderLeftColor=u.color;
-    var chanBadge=s.canale==='W'?'<span class="chan-badge chan-w">📱 WhatsApp</span>':'<span class="chan-badge chan-m">✉️ Mail</span>';
+    var chanBadge=s.canale==='W'?'<span class="chan-badge chan-w">📱 W</span>':'<span class="chan-badge chan-m">✉️ M</span>';
     var chipsHtml=SHIP_FIELDS.map(function(f){
       return '<span class="chip'+(s[f.k]?' on':'')+'" data-id="'+s.id+'" data-field="'+f.k+'">'+f.l+(s[f.k]?' ✓':'')+'</span>';
     }).join('');
@@ -726,10 +824,9 @@ function renderShipments(){
       '<div class="sc-head"><span class="utag" style="color:'+u.color+';background:'+u.bg+';border:1px solid '+u.color+'44">'+u.emoji+' '+u.label+'</span>'+
       '<div class="oacts"><button class="ocb sedit" data-id="'+s.id+'">✏️</button><button class="ocb sdel" data-id="'+s.id+'" style="color:var(--red)">🗑</button></div></div>'+
       '<div class="sc-name">'+esc(s.locale)+'</div>'+
-      '<div class="sc-meta">'+chanBadge+(s.pagamento?'<span style="font-size:11px;color:var(--sub);">💳 '+esc(s.pagamento)+'</span>':'')+'</div>'+
+      '<div class="sc-meta">'+chanBadge+(s.pagamento?'<span style="font-size:11px;color:var(--sub);">💳 '+esc(s.pagamento)+'</span>':'')+(s.proforma?'<span class="chip on" style="font-size:10px;padding:2px 7px;">Proforma ✓</span>':'')+(s.fattura?'<span class="chip on" style="font-size:10px;padding:2px 7px;">Fattura ✓</span>':'')+'</div>'+
       (s.merce?'<div class="sc-field">📦 '+esc(s.merce)+'</div>':'')+
       (s.sigilli?'<div class="sc-field">🔒 '+esc(s.sigilli)+'</div>':'')+
-      (s.note?'<div class="sc-field" style="color:var(--muted);">📝 '+esc(s.note)+'</div>':'')+
       '<div class="chips">'+chipsHtml+'</div>';
     list.appendChild(card);
   });
@@ -755,9 +852,10 @@ function openOrderModal(editId,defDay){
   document.getElementById('floc').value=order?order.locale:'';
   document.getElementById('fluo').value=order?order.luogo:'';
   document.getElementById('fmer').value=order?order.merce:'';
-  document.getElementById('fsig').value=order?order.sigilli:'';
   document.getElementById('fnot').value=order?order.note:'';
   document.getElementById('repgrp').style.display=isEdit?'flex':'none';
+  var selSig = order?order.sigilli:'';
+  buildChipPicker('osig-pick', SIGILLI_OPTS, selSig, u.color, u.bg, function(v){selSig=v;});
   var dp=document.getElementById('dpick');dp.innerHTML='';
   var selDay=day;
   DAYS.forEach(function(d){
@@ -779,8 +877,8 @@ function openOrderModal(editId,defDay){
     var locale=document.getElementById('floc').value.trim(),luogo=document.getElementById('fluo').value.trim(),merce=document.getElementById('fmer').value.trim();
     if(!locale||!luogo||!merce){toast('Compila i campi obbligatori *','err');return;}
     sb.textContent='…';sb.disabled=true;
-    var payload={locale:locale,luogo:luogo,merce:document.getElementById('fmer').value.trim(),sigilli:document.getElementById('fsig').value.trim(),note:document.getElementById('fnot').value.trim(),day:selDay,userId:selRep};
-    if(isEdit){payload.createdAt=order.createdAt;payload.updatedAt=new Date().toISOString();}
+    var payload={locale:locale,luogo:luogo,merce:merce,sigilli:selSig||'',note:document.getElementById('fnot').value.trim(),day:selDay,userId:selRep,weekKey:S.dayWeek||S.week||currentWeekKey()};
+    if(isEdit){payload.createdAt=order.createdAt;payload.updatedAt=new Date().toISOString();payload.weekKey=order.weekKey||currentWeekKey();}
     else{payload.createdAt=new Date().toISOString();}
     encOrder(payload,function(err,enc){
       if(err){toast('Errore cifratura','err');sb.textContent=isEdit?'Aggiorna Ordine':'Salva Ordine';sb.disabled=false;return;}
@@ -799,9 +897,10 @@ function openShipmentModal(editId){
   document.getElementById('smtit').textContent=isEdit?'Modifica Spedizione':'Nuova Spedizione';
   document.getElementById('sloc').value=ship?ship.locale:'';
   document.getElementById('smer').value=ship?ship.merce:'';
-  document.getElementById('ssig').value=ship?ship.sigilli:'';
-  document.getElementById('spag').value=ship?ship.pagamento:'';
-  document.getElementById('snot').value=ship?ship.note:'';
+  var selSSig = ship?ship.sigilli:'';
+  var selSpag = ship?ship.pagamento:'';
+  buildChipPicker('ssig-pick', SIGILLI_OPTS, selSSig, u.color, u.bg, function(v){selSSig=v;});
+  buildChipPicker('spag-pick', PAG_OPTS, selSpag, u.color, u.bg, function(v){selSpag=v;});
   document.getElementById('srepgrp').style.display=isEdit?'flex':'none';
 
   // Chan picker
@@ -829,6 +928,25 @@ function openShipmentModal(editId){
   SHIP_FIELDS.forEach(function(f){
     chipState[f.k] = ship ? (ship[f.k]||false) : false;
   });
+  PAG_EXTRA.forEach(function(f){
+    chipState[f.k] = ship ? (ship[f.k]||false) : false;
+  });
+  // Proforma e Fattura: toggle indipendenti nella sezione pagamento
+  function renderPagExtra(){
+    var container=document.getElementById('spag-extra');
+    if(!container)return;
+    container.innerHTML='';
+    PAG_EXTRA.forEach(function(f){
+      var btn=document.createElement('button');
+      var isOn=chipState[f.k]||false;
+      btn.className='chip'+(isOn?' on':'');
+      if(isOn){btn.style.background='var(--gbg)';btn.style.color='var(--green)';btn.style.borderColor='#16a87a55';}
+      btn.textContent=f.l+(isOn?' ✓':'');
+      btn.onclick=function(){chipState[f.k]=!chipState[f.k];renderPagExtra();};
+      container.appendChild(btn);
+    });
+  }
+  renderPagExtra();
   function updateFormChips(){
     SHIP_FIELDS.forEach(function(f){
       var chip = document.getElementById('fchip-'+f.k);
@@ -853,7 +971,7 @@ function openShipmentModal(editId){
     if(!locale||!merce){toast('Compila i campi obbligatori *','err');return;}
     sb.textContent='…';sb.disabled=true;
     var bools={};SHIP_FIELDS.forEach(function(f){bools[f.k]=chipState[f.k]||false;});
-    var payload=Object.assign({locale:locale,canale:selChan,merce:merce,sigilli:document.getElementById('ssig').value.trim(),pagamento:document.getElementById('spag').value.trim(),note:document.getElementById('snot').value.trim(),userId:selRep},bools);
+    var payload=Object.assign({locale:locale,canale:selChan,merce:merce,sigilli:selSSig||'',pagamento:selSpag||'',userId:selRep},bools);
     if(isEdit){payload.createdAt=ship.createdAt;payload.updatedAt=new Date().toISOString();}
     else{payload.createdAt=new Date().toISOString();}
     encShipment(payload,function(err,enc){
@@ -869,8 +987,12 @@ function openShipmentModal(editId){
 // ── EXPORT ORDERS ─────────────────────────────────────────────────────────
 function openExport(rows,title){
   document.getElementById('extit').textContent=title;
-  var hdr=['Rappresentante','Nome Locale','Luogo Consegna','Merce / Quantità','Sigilli','Note'];
-  var txt=[hdr].concat(rows.map(function(o){return[USERS[o.userId]?USERS[o.userId].label:o.userId,o.locale,o.luogo,o.merce,o.sigilli||'',o.note||''];})).map(function(r){return r.join('\t');}).join('\n');
+  var hdr=['Azienda','Nome Locale','Luogo Consegna','Articoli','Sigilli','Note'];
+  var txt=[hdr].concat(rows.map(function(o){return[
+    USERS[o.userId]?USERS[o.userId].label:o.userId,
+    o.locale, o.luogo, o.merce,
+    o.sigilli||'', o.note||''
+  ];})).map(function(r){return r.join('\t');}).join('\n');
   document.getElementById('exta').value=txt;
   var cb=document.getElementById('cpbtn');cb.textContent='📋 Copia negli appunti';
   cb.onclick=function(){navigator.clipboard.writeText(txt).catch(function(){document.getElementById('exta').select();document.execCommand('copy');});cb.textContent='✓ Copiato!';setTimeout(function(){cb.textContent='📋 Copia negli appunti';},2500);};
@@ -879,13 +1001,17 @@ function openExport(rows,title){
 
 // ── EXPORT SHIPMENTS ──────────────────────────────────────────────────────
 function exportShipments(rows){
-  var hdr=['Rappresentante','Nome Locale','Canale','Merce / Quantità','Sigilli','Pagamento','Proforma','Fattura','Pagato','GLS','Pacco pronto','Spedito','Note'];
+  var hdr=['Azienda','Nome Locale','Canale','Articoli','Sigilli','Pagamento','Proforma','Fattura','Pagato','Avviso','Etichetta','Pronto','Spedito'];
   var txt=[hdr].concat(rows.map(function(s){
     return[
       USERS[s.userId]?USERS[s.userId].label:s.userId,
-      s.locale,s.canale==='W'?'WhatsApp':'Mail',s.merce,s.sigilli||'',s.pagamento||'',
+      s.locale,
+      s.canale||'',
+      s.merce,
+      s.sigilli||'',
+      s.pagamento||'',
       s.proforma?'X':'',s.fattura?'X':'',s.pagato?'X':'',
-      s.gls?'X':'',s.pacco?'X':'',s.spedito?'X':'',s.note||''
+      s.avviso?'X':'',s.etichetta?'X':'',s.pacco?'X':'',s.spedito?'X':''
     ];
   })).map(function(r){return r.join('\t');}).join('\n');
   document.getElementById('extit').textContent='Esporta Spedizioni';
@@ -900,6 +1026,29 @@ function enterSelMode(){selMode=true;selIds={};document.getElementById('selbar')
 function exitSelMode(){selMode=false;selIds={};document.getElementById('selbar').style.display='none';renderDay();}
 
 // ── EVENTS ────────────────────────────────────────────────────────────────
+// Week navigation
+// Reset ALL orders
+document.getElementById('reset-all-btn').addEventListener('click',function(){
+  confirm('Eliminare TUTTI gli ordini dal database? Questa operazione è irreversibile.',function(){
+    confirm('Sei assolutamente sicuro? Verranno eliminati tutti gli ordini di tutte le settimane.',function(){
+      var allIds = S.orders.map(function(o){return o.id;});
+      if(!allIds.length){toast('Nessun ordine da eliminare');return;}
+      Promise.all(allIds.map(function(id){return ocol.doc(id).delete();}))
+        .then(function(){toast(allIds.length+' ordini eliminati 🗑️');})
+        .catch(function(e){toast('Errore: '+e.message,'err');});
+    });
+  });
+});
+
+document.getElementById('week-prev').addEventListener('click',function(){
+  S.week = weekKeyOffset(S.week || currentWeekKey(), -1);
+  renderHome();
+});
+document.getElementById('week-next').addEventListener('click',function(){
+  S.week = weekKeyOffset(S.week || currentWeekKey(), +1);
+  renderHome();
+});
+
 document.getElementById('eye1').addEventListener('click',function(){var i=document.getElementById('lpw');i.type=i.type==='password'?'text':'password';});
 document.getElementById('eye2').addEventListener('click',function(){var i=document.getElementById('cpw');i.type=i.type==='password'?'text':'password';});
 document.getElementById('cpw').addEventListener('input',function(){
