@@ -14,7 +14,7 @@
 :root {
   --bg:#f4f6f9; --surface:#fff; --surface2:#f0f2f5;
   --border:#e2e6ea; --muted:#8a94a0; --text:#1a1f2e; --sub:#555f6e;
-  --green:#16a87a; --gbg:#e6f7f2; --violet:#7c5cdb; --vbg:#f0ecfc;
+  --green:#f97316; --chip-green:#16a87a; --chip-green-bg:#e6f7f2; --gbg:#fff7ed; --violet:#0ea5e9; --vbg:#e0f2fe;
   --red:#e53935; --amber:#d97706;
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;margin:0;padding:0;}
@@ -63,19 +63,19 @@ textarea{resize:none;}
 #htitle{font-size:16px;font-weight:900;}
 #hsub{font-size:9px;color:var(--muted);font-weight:600;margin-top:1px;}
 #hright{display:flex;gap:4px;align-items:center;}
-#enc{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:var(--gbg);color:var(--green);border:1px solid #34d39933;}
+#enc{font-size:10px;font-weight:700;padding:3px 8px;border-radius:10px;background:#fef9c3;color:#ca8a04;border:1px solid #ca8a0444;}
 #upill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;}
 .hb{font-size:18px;color:var(--muted);padding:4px 6px;line-height:1;}
 
 #conn{padding:5px 16px;font-size:11px;font-weight:700;text-align:center;display:none;}
-#conn.ok{display:block;background:var(--gbg);color:var(--green);border-bottom:1px solid #34d39933;}
+#conn.ok{display:block;background:#e6f7f2;color:#16a87a;border-bottom:1px solid #16a87a33;}
 #conn.off{display:block;background:#fff8e1;color:var(--amber);border-bottom:1px solid #fcd34d66;}
 
 /* BOTTOM NAV */
 #bnav{display:none;position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:460px;background:var(--surface);border-top:1.5px solid var(--border);flex-shrink:0;box-shadow:0 -1px 4px rgba(0,0,0,.05);z-index:100;}
 #bnav.show{display:flex;}
 .bnavbtn{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 0;font-size:10px;font-weight:700;color:var(--muted);border-top:2px solid transparent;}
-.bnavbtn.active{color:var(--green);border-top-color:var(--green);}
+.bnavbtn.active{color:#16a87a;border-top-color:#16a87a;}
 .bnavbtn span:first-child{font-size:20px;}
 
 #app{display:flex;flex-direction:column;height:100vh;max-width:460px;margin:0 auto;}
@@ -136,7 +136,9 @@ textarea{resize:none;}
 /* STATUS CHIPS */
 .chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;}
 .chip{font-size:13px;font-weight:700;padding:8px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--surface2);color:var(--muted);cursor:pointer;transition:all .15s;user-select:none;}
-.chip.on{background:var(--gbg);color:var(--green);border-color:#16a87a55;}
+.sc .chip{font-size:10px;font-weight:700;padding:3px 9px;border-radius:14px;}
+.sc .chip.on{background:#e6f7f2 !important;color:#16a87a !important;border-color:#16a87a55 !important;}
+.chip.on{background:var(--chip-green-bg);color:var(--chip-green);border-color:#16a87a55;}
 
 /* SHIPMENTS TOOLBAR */
 #stbar{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;padding:10px 14px;background:var(--surface);border:1.5px solid var(--border);border-radius:12px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.04);}
@@ -169,7 +171,7 @@ textarea{resize:none;}
 .rtog{flex:1;padding:10px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:700;}
 .chan-pick{display:flex;gap:8px;}
 .ctog{flex:1;padding:12px;border-radius:10px;border:2px solid var(--border);background:transparent;color:var(--muted);font-size:13px;font-weight:700;text-align:center;}
-.ctog.w-on{border-color:#16a87a;background:var(--gbg);color:var(--green);}
+.ctog.w-on{border-color:#16a87a;background:#e6f7f2;color:#16a87a;}
 .ctog.m-on{border-color:#3b82f6;background:#eff6ff;color:#3b82f6;}
 #sbtn{padding:14px;border-radius:12px;font-size:15px;font-weight:800;color:#fff;margin-top:2px;}
 
@@ -281,7 +283,6 @@ textarea{resize:none;}
         <label class="flbl">📋 Stato spedizione</label>
         <div style="display:flex;gap:8px;flex-wrap:wrap;" id="status-chips-form">
           <button class="chip" id="fchip-avviso"    data-field="avviso">Avviso</button>
-          <button class="chip" id="fchip-pagato"    data-field="pagato">Pagato</button>
           <button class="chip" id="fchip-etichetta" data-field="etichetta">Etichetta</button>
           <button class="chip" id="fchip-pacco"     data-field="pacco">Pronto</button>
           <button class="chip" id="fchip-spedito"   data-field="spedito">Spedito</button>
@@ -326,9 +327,9 @@ textarea{resize:none;}
     <!-- HOME -->
     <div id="shome" class="scr">
       <div id="sstrip">
-        <div class="scell"><span class="sn" id="st" style="color:var(--muted)">0</span><span class="sl">Consegne</span></div>
+        <div class="scell"><span class="sn" id="st" style="color:#16a87a">0</span><span class="sl">Consegne</span></div>
         <div class="sdiv"></div>
-        <div class="scell"><span class="sn" id="ss" style="color:var(--amber)">0</span><span class="sl">Spedizioni</span></div>
+        <div class="scell"><span class="sn" id="ss" style="color:#16a87a">0</span><span class="sl">Spedizioni</span></div>
         <div class="sdiv"></div>
         <div class="scell"><span class="sn" id="sf" style="color:var(--green)">0</span><span class="sl">Framezzino</span></div>
         <div class="sdiv"></div>
@@ -338,7 +339,7 @@ textarea{resize:none;}
         <button id="week-prev" style="font-size:22px;font-weight:300;color:var(--muted);padding:4px 8px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border);">‹</button>
         <div style="text-align:center;flex:1;margin:0 8px;">
           <div id="week-range" style="font-size:13px;font-weight:700;color:var(--text);"></div>
-          <div id="week-badge" style="font-size:10px;font-weight:700;color:var(--green);letter-spacing:.5px;margin-top:2px;"></div>
+          <div id="week-badge" style="font-size:10px;font-weight:700;color:#16a87a;letter-spacing:.5px;margin-top:2px;"></div>
         </div>
         <button id="week-next" style="font-size:22px;font-weight:300;color:var(--muted);padding:4px 8px;border-radius:8px;background:var(--surface);border:1.5px solid var(--border);">›</button>
       </div>
@@ -408,17 +409,16 @@ var DAYS = [
   {k:'dom',l:'Domenica',s:'Dom'}
 ];
 var USERS = {
-  FRAMEZZINO:{id:'FRAMEZZINO',label:'Framezzino',color:'#16a87a',bg:'#e6f7f2',emoji:'🟢'},
-  JP_EMPIRE: {id:'JP_EMPIRE', label:'JP Empire', color:'#7c5cdb',bg:'#f0ecfc',emoji:'🟣'}
+  FRAMEZZINO:{id:'FRAMEZZINO',label:'Framezzino',color:'#f97316',bg:'#fff7ed',emoji:'🟠'},
+  JP_EMPIRE: {id:'JP_EMPIRE', label:'JP Empire', color:'#0ea5e9',bg:'#e0f2fe',emoji:'🔵'}
 };
 var SHIP_FIELDS = [
   {k:'avviso',    l:'Avviso'},
-  {k:'pagato',    l:'Pagato'},
   {k:'etichetta', l:'Etichetta'},
   {k:'pacco',     l:'Pronto'},
   {k:'spedito',   l:'Spedito'}
 ];
-var PAG_EXTRA = [{k:'proforma', l:'Proforma'}, {k:'fattura', l:'Fattura'}];
+var PAG_EXTRA = [{k:'proforma', l:'Proforma'}, {k:'fattura', l:'Fattura'}, {k:'pagato', l:'Pagato'}];
 var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €'];
 var PAG_OPTS     = ['Bonifico', 'Contrassegno', 'Paypal'];
 var SK = 'ds_cpw';
@@ -507,6 +507,7 @@ function decOrder(id,d,cb){
 function encShipment(o,cb){
   var bools={};
   SHIP_FIELDS.forEach(function(f){bools[f.k]=o[f.k]||false;});
+  PAG_EXTRA.forEach(function(f){bools[f.k]=o[f.k]||false;});
   encFields(o,SHIP_TEXT_FIELDS,Object.assign(bools,{
     createdAt:o.createdAt||new Date().toISOString(),
     updatedAt:o.updatedAt||null,v:1
@@ -516,6 +517,7 @@ function decShipment(id,d,cb){
   decFields(id,d,SHIP_TEXT_FIELDS,function(err,r){
     if(err){cb(err,null);return;}
     SHIP_FIELDS.forEach(function(f){r[f.k]=d[f.k]||false;});
+    PAG_EXTRA.forEach(function(f){r[f.k]=d[f.k]||false;});
     r.createdAt=d.createdAt; r.updatedAt=d.updatedAt;
     cb(null,r);
   });
@@ -581,7 +583,7 @@ function buildChipPicker(containerId, opts, currentVal, accentColor, accentBg, o
     var btn = document.createElement('button');
     var isOn = sel === opt;
     btn.className = 'chip' + (isOn ? ' on' : '');
-    if (isOn) { btn.style.background=accentBg; btn.style.color=accentColor; btn.style.borderColor=accentColor+'55'; }
+    if (isOn) { btn.style.background='var(--chip-green-bg)'; btn.style.color='var(--chip-green)'; btn.style.borderColor='#16a87a55'; }
     btn.textContent = opt + (isOn ? ' ✓' : '');
     btn.addEventListener('click', function() {
       sel = (sel === opt) ? null : opt; // toggle
@@ -816,30 +818,34 @@ function renderShipments(){
   ships.forEach(function(s){
     var u=USERS[s.userId]||USERS.FRAMEZZINO;
     var card=document.createElement('div');card.className='sc';card.style.borderLeftColor=u.color;
+
+    // Canale badge
     var chanBadge=s.canale==='W'?'<span class="chan-badge chan-w">📱 W</span>':'<span class="chan-badge chan-m">✉️ M</span>';
-    var chipsHtml=SHIP_FIELDS.map(function(f){
-      return '<span class="chip'+(s[f.k]?' on':'')+'" data-id="'+s.id+'" data-field="'+f.k+'">'+f.l+(s[f.k]?' ✓':'')+'</span>';
+
+    // Chip pagamento (non interattivi): metodo + proforma + fattura + pagato
+    var pagChips='';
+    if(s.pagamento) pagChips+='<span class="chip on" style="pointer-events:none;">'+esc(s.pagamento)+'</span>';
+    PAG_EXTRA.forEach(function(f){
+      pagChips+='<span class="chip'+(s[f.k]?' on':'')+'" style="pointer-events:none;">'+f.l+(s[f.k]?' ✓':'')+'</span>';
+    });
+
+    // Chip stato (non interattivi): Avviso, Etichetta, Pronto, Spedito
+    var statoChips=SHIP_FIELDS.map(function(f){
+      return '<span class="chip'+(s[f.k]?' on':'')+'" style="pointer-events:none;">'+f.l+(s[f.k]?' ✓':'')+'</span>';
     }).join('');
+
     card.innerHTML=
       '<div class="sc-head"><span class="utag" style="color:'+u.color+';background:'+u.bg+';border:1px solid '+u.color+'44">'+u.emoji+' '+u.label+'</span>'+
       '<div class="oacts"><button class="ocb sedit" data-id="'+s.id+'">✏️</button><button class="ocb sdel" data-id="'+s.id+'" style="color:var(--red)">🗑</button></div></div>'+
       '<div class="sc-name">'+esc(s.locale)+'</div>'+
-      '<div class="sc-meta">'+chanBadge+(s.pagamento?'<span style="font-size:11px;color:var(--sub);">💳 '+esc(s.pagamento)+'</span>':'')+(s.proforma?'<span class="chip on" style="font-size:10px;padding:2px 7px;">Proforma ✓</span>':'')+(s.fattura?'<span class="chip on" style="font-size:10px;padding:2px 7px;">Fattura ✓</span>':'')+'</div>'+
+      '<div class="sc-meta">'+chanBadge+'</div>'+
       (s.merce?'<div class="sc-field">📦 '+esc(s.merce)+'</div>':'')+
       (s.sigilli?'<div class="sc-field">🔒 '+esc(s.sigilli)+'</div>':'')+
-      '<div class="chips">'+chipsHtml+'</div>';
+      (pagChips?'<div style="margin-top:8px;"><span style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">💳 PAGAMENTO</span><div class="chips" style="margin-top:5px;">'+pagChips+'</div></div>':'')+
+      '<div style="margin-top:6px;"><span style="font-size:10px;color:var(--muted);font-weight:700;letter-spacing:.5px;">📋 STATO</span><div class="chips" style="margin-top:5px;">'+statoChips+'</div></div>';
     list.appendChild(card);
   });
-  // Chip toggle
-  list.querySelectorAll('.chip').forEach(function(chip){
-    chip.addEventListener('click',function(){
-      var id=chip.dataset.id,field=chip.dataset.field;
-      var ship=S.shipments.find(function(s){return s.id===id;});
-      if(!ship)return;
-      var update={};update[field]=!ship[field];update.updatedAt=new Date().toISOString();
-      scol.doc(id).update(update).catch(function(e){toast('Errore: '+e.message,'err');});
-    });
-  });
+  // Solo edit e delete — nessun toggle chip dalla card
   list.querySelectorAll('.sedit').forEach(function(b){b.addEventListener('click',function(){openShipmentModal(b.dataset.id);});});
   list.querySelectorAll('.sdel').forEach(function(b){b.addEventListener('click',function(){var id=b.dataset.id;confirm('Eliminare questa spedizione?',function(){scol.doc(id).delete().then(function(){toast('Spedizione eliminata');});});});});
 }
@@ -940,7 +946,7 @@ function openShipmentModal(editId){
       var btn=document.createElement('button');
       var isOn=chipState[f.k]||false;
       btn.className='chip'+(isOn?' on':'');
-      if(isOn){btn.style.background='var(--gbg)';btn.style.color='var(--green)';btn.style.borderColor='#16a87a55';}
+      if(isOn){btn.style.background='var(--chip-green-bg)';btn.style.color='var(--chip-green)';btn.style.borderColor='#16a87a55';}
       btn.textContent=f.l+(isOn?' ✓':'');
       btn.onclick=function(){chipState[f.k]=!chipState[f.k];renderPagExtra();};
       container.appendChild(btn);
@@ -970,7 +976,7 @@ function openShipmentModal(editId){
     var locale=document.getElementById('sloc').value.trim(),merce=document.getElementById('smer').value.trim();
     if(!locale||!merce){toast('Compila i campi obbligatori *','err');return;}
     sb.textContent='…';sb.disabled=true;
-    var bools={};SHIP_FIELDS.forEach(function(f){bools[f.k]=chipState[f.k]||false;});
+    var bools={};SHIP_FIELDS.forEach(function(f){bools[f.k]=chipState[f.k]||false;});PAG_EXTRA.forEach(function(f){bools[f.k]=chipState[f.k]||false;});
     var payload=Object.assign({locale:locale,canale:selChan,merce:merce,sigilli:selSSig||'',pagamento:selSpag||'',userId:selRep},bools);
     if(isEdit){payload.createdAt=ship.createdAt;payload.updatedAt=new Date().toISOString();}
     else{payload.createdAt=new Date().toISOString();}
@@ -1053,7 +1059,7 @@ document.getElementById('eye1').addEventListener('click',function(){var i=docume
 document.getElementById('eye2').addEventListener('click',function(){var i=document.getElementById('cpw');i.type=i.type==='password'?'text':'password';});
 document.getElementById('cpw').addEventListener('input',function(){
   var pw=this.value,sc=pwStr(pw),pct=Math.round(sc/7*100);
-  var cols=['#ef4444','#ef4444','#f59e0b','#f59e0b','#eab308','#22c55e','#16a87a','#16a87a'];
+  var cols=['#ef4444','#ef4444','#f59e0b','#f59e0b','#eab308','#22c55e','#f97316','#f97316'];
   var lbls=['Troppo debole','Molto debole','Debole','Discreta','Buona','Forte','Molto forte','Eccellente'];
   var bar=document.getElementById('sbar'),lbl=document.getElementById('slbl');
   bar.style.cssText='height:4px;border-radius:2px;width:'+pct+'%;background:'+cols[sc]+';transition:all .3s;';
