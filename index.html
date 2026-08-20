@@ -277,6 +277,7 @@ textarea{resize:none;}
     <div class="mbody">
       <div class="fg" id="srepgrp" style="display:none"><label class="flbl">Azienda</label><div class="rpick" id="srpick"></div></div>
       <div class="fg"><label class="flbl">🏪 Nome Locale</label><input class="finp" id="sloc" placeholder=""></div>
+      <div class="fg"><label class="flbl">📍 Luogo Spedizione</label><input class="finp" id="sluogo" placeholder=""></div>
       <div class="fg">
         <label class="flbl">📨 Canale</label>
         <div class="chan-pick">
@@ -446,7 +447,7 @@ var SHIP_FIELDS = [
   {k:'spedito',   l:'Spedito'}
 ];
 var PAG_EXTRA = [{k:'proforma', l:'Proforma'}, {k:'fattura', l:'Fattura'}, {k:'pagato', l:'Pagato'}];
-var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €', 'Color. om.', 'Smile om.', 'Color. €', 'Smile €'];
+var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €', 'Color. om.', 'Color. €', 'Smile om.', 'Smile €'];
 var PAG_OPTS     = ['Bonifico', 'Contrassegno', 'Paypal'];
 var SK = 'ds_cpw';
 
@@ -513,7 +514,7 @@ function decFields(id,d,fields,cb){
 }
 
 var ORDER_TEXT_FIELDS = ['locale','luogo','merce','sigilli','note','day','userId'];
-var SHIP_TEXT_FIELDS  = ['locale','canale','merce','sigilli','pagamento','userId'];
+var SHIP_TEXT_FIELDS  = ['locale','luogo','canale','merce','sigilli','pagamento','userId'];
 
 function encOrder(o,cb){
   encFields(o,ORDER_TEXT_FIELDS,{
@@ -988,7 +989,7 @@ function renderShipments(){
     card.innerHTML=
       '<div class="sc-head"><span class="drag-handle" data-drag="'+s.id+'">⠿</span><span class="utag" style="color:'+u.color+';background:'+u.bg+';border:1px solid '+u.color+'44">'+u.emoji+' '+u.label+'</span>'+
       '<div class="oacts"><button class="ocb sedit" data-id="'+s.id+'">✏️</button><button class="ocb sdel" data-id="'+s.id+'" style="color:var(--red)">🗑</button></div></div>'+
-      '<div class="sc-name">'+esc(s.locale)+'</div>'+
+      '<div class="sc-name">'+esc(s.locale)+'</div>'+(s.luogo?'<div class="sc-field">📍 '+esc(s.luogo)+'</div>':'')+
       '<div class="sc-meta">'+chanBadge+'</div>'+
       (s.merce?'<div class="sc-field">📦 '+esc(s.merce)+'</div>':'')+
       (s.sigilli?'<div class="sc-field">🔒 '+esc(s.sigilli)+'</div>':'')+
@@ -1147,6 +1148,7 @@ function openShipmentModal(editId){
   var u=USERS[S.uid];
   document.getElementById('smtit').textContent=isEdit?'Modifica Spedizione':'Nuova Spedizione';
   document.getElementById('sloc').value=ship?ship.locale:'';
+  document.getElementById('sluogo').value=ship?ship.luogo:'';
   document.getElementById('smer').value=ship?ship.merce:'';
   var selSSig = ship?ship.sigilli:'';
   var selSpag = ship?ship.pagamento:'';
@@ -1223,7 +1225,7 @@ function openShipmentModal(editId){
     sb.textContent='…';sb.disabled=true;
     var bools={};SHIP_FIELDS.forEach(function(f){bools[f.k]=chipState[f.k]||false;});PAG_EXTRA.forEach(function(f){bools[f.k]=chipState[f.k]||false;});
     var maxSPos=S.shipments.reduce(function(m,s){return s.pos!=null&&s.pos>m?s.pos:m;},0);
-    var payload=Object.assign({locale:locale,canale:selChan,merce:merce,sigilli:selSSig||'',pagamento:selSpag||'',userId:selRep,pos:isEdit?(ship.pos!=null?ship.pos:maxSPos+1):maxSPos+1},bools);
+    var payload=Object.assign({locale:locale,luogo:document.getElementById('sluogo').value.trim(),canale:selChan,merce:merce,sigilli:selSSig||'',pagamento:selSpag||'',userId:selRep,pos:isEdit?(ship.pos!=null?ship.pos:maxSPos+1):maxSPos+1},bools);
     if(isEdit){payload.createdAt=ship.createdAt;payload.updatedAt=new Date().toISOString();}
     else{payload.createdAt=new Date().toISOString();}
     encShipment(payload,function(err,enc){
@@ -1253,11 +1255,12 @@ function openExport(rows,title){
 
 // ── EXPORT SHIPMENTS ──────────────────────────────────────────────────────
 function exportShipments(rows){
-  var hdr=['Azienda','Nome Locale','Canale','Articoli','Sigilli','Pagamento','Proforma','Fattura','Pagato','Avviso','Etichetta','Pronto','Spedito'];
+  var hdr=['Azienda','Nome Locale','Luogo Spedizione','Canale','Articoli','Sigilli','Pagamento','Proforma','Fattura','Pagato','Avviso','Etichetta','Pronto','Spedito'];
   var txt=[hdr].concat(rows.map(function(s){
     return[
       USERS[s.userId]?USERS[s.userId].label:s.userId,
       s.locale,
+      s.luogo||'',
       s.canale||'',
       s.merce,
       s.sigilli||'',
