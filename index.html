@@ -446,7 +446,7 @@ var SHIP_FIELDS = [
   {k:'spedito',   l:'Spedito'}
 ];
 var PAG_EXTRA = [{k:'proforma', l:'Proforma'}, {k:'fattura', l:'Fattura'}, {k:'pagato', l:'Pagato'}];
-var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €'];
+var SIGILLI_OPTS = ['Bianchi', 'Pers. om.', 'Pers. €', 'Color. om.', 'Smile om.', 'Color. €', 'Smile €'];
 var PAG_OPTS     = ['Bonifico', 'Contrassegno', 'Paypal'];
 var SK = 'ds_cpw';
 
@@ -609,17 +609,22 @@ function buildChipPicker(containerId, opts, currentVal, accentColor, accentBg, o
   var container = document.getElementById(containerId);
   if (!container) return;
   container.innerHTML = '';
-  var sel = currentVal || null;
+  // Multi-select: currentVal is comma-separated string
+  var selArr = currentVal ? currentVal.split(',').map(function(s){return s.trim();}).filter(Boolean) : [];
+  function getVal(){ return selArr.join(', '); }
   opts.forEach(function(opt) {
     var btn = document.createElement('button');
-    var isOn = sel === opt;
+    var isOn = selArr.indexOf(opt) !== -1;
     btn.className = 'chip' + (isOn ? ' on' : '');
     if (isOn) { btn.style.background='var(--chip-green-bg)'; btn.style.color='var(--chip-green)'; btn.style.borderColor='#16a87a55'; }
+    else { btn.style.background=''; btn.style.color=''; btn.style.borderColor=''; }
     btn.textContent = opt + (isOn ? ' ✓' : '');
     btn.addEventListener('click', function() {
-      sel = (sel === opt) ? null : opt; // toggle
-      onSelect(sel);
-      buildChipPicker(containerId, opts, sel, accentColor, accentBg, onSelect);
+      var idx = selArr.indexOf(opt);
+      if (idx !== -1) selArr.splice(idx, 1);
+      else selArr.push(opt);
+      onSelect(getVal());
+      buildChipPicker(containerId, opts, getVal(), accentColor, accentBg, onSelect);
     });
     container.appendChild(btn);
   });
