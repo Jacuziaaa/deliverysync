@@ -1090,9 +1090,23 @@ function openOrderModal(editId,defDay){
 
   // Settimana selezionata nel modal
   var modalWeek = order ? (order.weekKey||currentWeekKey()) : (S.dayWeek||S.week||currentWeekKey());
+  var selDay = day;
+
+  function buildModalDayPicker(){
+    var dp=document.getElementById('dpick');dp.innerHTML='';
+    DAYS.forEach(function(d){
+      var btn=document.createElement('button');btn.className='dtog';btn.textContent=d.s;
+      function act(){dp.querySelectorAll('.dtog').forEach(function(b){b.style.borderColor='';b.style.background='';b.style.color='';});btn.style.borderColor=u.color;btn.style.background=u.bg;btn.style.color=u.color;selDay=d.k;}
+      if(d.k===selDay)act();
+      btn.addEventListener('click',act);
+      dp.appendChild(btn);
+    });
+  }
+
   function updateModalWeek(){
     document.getElementById('modal-week-range').textContent = formatWeekRange(modalWeek);
     document.getElementById('modal-week-badge').textContent = modalWeek===currentWeekKey() ? '● Settimana corrente' : '';
+    buildModalDayPicker();
   }
   updateModalWeek();
   document.getElementById('modal-week-prev').onclick = function(){
@@ -1101,13 +1115,6 @@ function openOrderModal(editId,defDay){
   document.getElementById('modal-week-next').onclick = function(){
     modalWeek = weekKeyOffset(modalWeek,+1); updateModalWeek();
   };
-  var dp=document.getElementById('dpick');dp.innerHTML='';
-  var selDay=day;
-  DAYS.forEach(function(d){
-    var btn=document.createElement('button');btn.className='dtog';btn.textContent=d.s;
-    function act(){dp.querySelectorAll('.dtog').forEach(function(b){b.style.borderColor='';b.style.background='';b.style.color='';});btn.style.borderColor=u.color;btn.style.background=u.bg;btn.style.color=u.color;selDay=d.k;}
-    if(d.k===day)act();btn.addEventListener('click',act);dp.appendChild(btn);
-  });
   var selRep=order?order.userId:S.uid;
   if(isEdit){
     var rp=document.getElementById('rpick');rp.innerHTML='';
