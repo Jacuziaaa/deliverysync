@@ -275,6 +275,7 @@ textarea{resize:none;}
         <label class="flbl">🔒 Sigilli</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;" id="osig-pick"></div>
       </div>
+      <div class="fg"><label class="flbl">🎁 Omaggio</label><input class="finp" id="fomaggio" placeholder="es. 10+1 S, 200 pz M..."></div>
       <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="fnot" placeholder=""></textarea></div>
       <button id="sbtn">Salva Ordine</button>
     </div>
@@ -529,7 +530,7 @@ function decFields(id,d,fields,cb){
   next();
 }
 
-var ORDER_TEXT_FIELDS = ['locale','luogo','merce','sigilli','note','day','userId'];
+var ORDER_TEXT_FIELDS = ['locale','luogo','merce','sigilli','omaggio','note','day','userId'];
 var SHIP_TEXT_FIELDS  = ['locale','luogo','canale','merce','sigilli','pagamento','omaggio','note','userId'];
 
 function encOrder(o,cb){
@@ -692,8 +693,7 @@ function buildArticoloPicker(containerId, currentVal, onChange) {
       return col;
     }
     picker.appendChild(makeCol('Tramezzini', TRAMEZZINI));
-    picker.appendChild(makeCol('Grantostati', GRANTOSTATI));
-    picker.appendChild(makeCol('Veline', VELINE));
+    picker.appendChild(makeCol('Grantostati', GRANTOSTATI.concat(VELINE)));
     container.appendChild(picker);
   }
   render();
@@ -933,7 +933,7 @@ function renderDay(){
     var headLeft=selMode?'<div class="sel-circle'+(isSel?' on':'')+'" data-id="'+o.id+'">'+(isSel?'✓':'')+'</div>':'<span class="utag" style="color:'+u.color+';background:'+u.bg+';border:1px solid '+u.color+'44">'+u.emoji+' '+u.label+'</span>';
     var actions=!selMode?'<button class="ocb bedit" data-id="'+o.id+'">✏️</button><button class="ocb bdel" data-id="'+o.id+'" style="color:var(--red)">🗑</button>':'';
     var repLine=selMode?'<div style="font-size:10px;font-weight:700;color:'+u.color+';margin-bottom:4px;">'+u.emoji+' '+u.label+'</div>':'';
-    c.innerHTML='<div class="och">'+dragHandle+headLeft+'<div class="oacts">'+actions+'</div></div>'+repLine+'<div class="oloc">'+esc(o.locale)+'</div><div class="of"><span class="oi">📍</span><span class="ov">'+esc(o.luogo)+'</span></div><div class="of"><span class="oi">📦</span><span class="ov">'+esc(o.merce)+'</span></div>'+(o.sigilli?'<div class="of"><span class="oi">🔒</span><span class="ov">'+esc(o.sigilli)+'</span></div>':'')+(o.note?'<div class="of"><span class="oi">📝</span><span class="ov dim">'+esc(o.note)+'</span></div>':'');
+    c.innerHTML='<div class="och">'+dragHandle+headLeft+'<div class="oacts">'+actions+'</div></div>'+repLine+'<div class="oloc">'+esc(o.locale)+'</div><div class="of"><span class="oi">📍</span><span class="ov">'+esc(o.luogo)+'</span></div><div class="of"><span class="oi">📦</span><span class="ov">'+esc(o.merce)+'</span></div>'+(o.sigilli?'<div class="of"><span class="oi">🔒</span><span class="ov">'+esc(o.sigilli)+'</span></div>':'')+(o.omaggio?'<div class="of"><span class="oi">🎁</span><span class="ov">'+esc(o.omaggio)+'</span></div>':'')+(o.note?'<div class="of"><span class="oi">📝</span><span class="ov dim">'+esc(o.note)+'</span></div>':'');
     list.appendChild(c);
   });
   list.querySelectorAll('.sel-circle').forEach(function(b){b.addEventListener('click',function(e){e.stopPropagation();var id=b.dataset.id;if(selIds[id])delete selIds[id];else selIds[id]=true;renderDay();});});
@@ -1182,6 +1182,7 @@ function openOrderModal(editId,defDay){
   document.getElementById('omtit').textContent=isEdit?'Modifica Ordine':'Nuovo Ordine';
   document.getElementById('floc').value=order?order.locale:'';
   document.getElementById('fluo').value=order?order.luogo:'';
+  document.getElementById('fomaggio').value=order?order.omaggio||'':'';
   document.getElementById('fnot').value=order?order.note:'';
   document.getElementById('repgrp').style.display=isEdit?'flex':'none';
   var selMer = order?order.merce:'';
@@ -1226,7 +1227,7 @@ function openOrderModal(editId,defDay){
     sb.textContent='…';sb.disabled=true;
     var dayOrders=S.orders.filter(function(o){return o.day===selDay&&(o.weekKey||currentWeekKey())===modalWeek;});
     var maxPos=dayOrders.reduce(function(m,o){return o.pos!=null&&o.pos>m?o.pos:m;},0);
-    var payload={locale:locale,luogo:luogo,merce:merce,sigilli:selSig||'',note:document.getElementById('fnot').value.trim(),day:selDay,userId:selRep,weekKey:modalWeek,pos:isEdit?(order.pos!=null?order.pos:maxPos+1):maxPos+1};
+    var payload={locale:locale,luogo:luogo,merce:merce,sigilli:selSig||'',omaggio:document.getElementById('fomaggio').value.trim(),note:document.getElementById('fnot').value.trim(),day:selDay,userId:selRep,weekKey:modalWeek,pos:isEdit?(order.pos!=null?order.pos:maxPos+1):maxPos+1};
     if(isEdit){payload.createdAt=order.createdAt;payload.updatedAt=new Date().toISOString();}
     else{payload.createdAt=new Date().toISOString();}
     encOrder(payload,function(err,enc){
@@ -1341,11 +1342,11 @@ function openShipmentModal(editId){
 // ── EXPORT ORDERS ─────────────────────────────────────────────────────────
 function openExport(rows,title){
   document.getElementById('extit').textContent=title;
-  var hdr=['Azienda','Nome Locale','Luogo Consegna','Articoli','Sigilli','Note'];
+  var hdr=['Azienda','Nome Locale','Luogo Consegna','Articoli','Sigilli','Omaggio','Note'];
   var txt=[hdr].concat(rows.map(function(o){return[
     USERS[o.userId]?USERS[o.userId].label:o.userId,
     o.locale, o.luogo, o.merce,
-    o.sigilli||'', o.note||''
+    o.sigilli||'', o.omaggio||'', o.note||''
   ];})).map(function(r){return r.join('\t');}).join('\n');
   document.getElementById('exta').value=txt;
   var cb=document.getElementById('cpbtn');cb.textContent='📋 Copia negli appunti';
