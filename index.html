@@ -271,11 +271,11 @@ textarea{resize:none;}
       <div class="fg"><label class="flbl">🏪 Nome Locale</label><input class="finp" id="floc" placeholder=""></div>
       <div class="fg"><label class="flbl">📍 Luogo Consegna</label><input class="finp" id="fluo" placeholder=""></div>
       <div class="fg"><label class="flbl">📦 Articoli</label><div id="fmer-pick"></div></div>
+      <div class="fg"><label class="flbl">🎁 Omaggio</label><input class="finp" id="fomaggio" placeholder=""></div>
       <div class="fg">
         <label class="flbl">🔒 Sigilli</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;" id="osig-pick"></div>
       </div>
-      <div class="fg"><label class="flbl">🎁 Omaggio</label><input class="finp" id="fomaggio" placeholder="es. 10+1 S, 200 pz M..."></div>
       <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="fnot" placeholder=""></textarea></div>
       <button id="sbtn">Salva Ordine</button>
     </div>
@@ -297,6 +297,7 @@ textarea{resize:none;}
         </div>
       </div>
       <div class="fg"><label class="flbl">📦 Articoli</label><div id="smer-pick"></div></div>
+      <div class="fg"><label class="flbl">🎁 Omaggio</label><input class="finp" id="somaggio" placeholder=""></div>
       <div class="fg">
         <label class="flbl">🔒 Sigilli</label>
         <div style="display:flex;gap:6px;flex-wrap:wrap;" id="ssig-pick"></div>
@@ -316,7 +317,6 @@ textarea{resize:none;}
           <button class="chip" id="fchip-spedito"   data-field="spedito">Spedito</button>
         </div>
       </div>
-      <div class="fg"><label class="flbl">🎁 Omaggio</label><input class="finp" id="somaggio" placeholder="es. 10+1 S, 200 pz M..."></div>
       <div class="fg"><label class="flbl">📝 Note</label><textarea class="finp fta" id="snot" placeholder=""></textarea></div>
       <button id="ssbtn" style="padding:14px;border-radius:12px;font-size:15px;font-weight:800;color:#fff;margin-top:2px;width:100%;">Salva Spedizione</button>
     </div>
@@ -649,55 +649,67 @@ function buildArticoloPicker(containerId, currentVal, onChange) {
   var qtys = parseArticoli(currentVal);
   TRAMEZZINI.forEach(function(k){ if (!qtys[k]) qtys[k] = 0; });
   GRANTOSTATI.forEach(function(k){ if (!qtys[k]) qtys[k] = 0; });
+  VELINE.forEach(function(k){ if (!qtys[k]) qtys[k] = 0; });
 
   function render() {
     container.innerHTML = '';
+
+    function makeRow(k) {
+      var row = document.createElement('div');
+      row.className = 'art-row';
+      var lbl = document.createElement('span'); lbl.className='art-label'; lbl.textContent=k;
+      var ctrl = document.createElement('div'); ctrl.className='art-ctrl';
+      var btnM = document.createElement('button'); btnM.className='art-btn'; btnM.textContent='−'; btnM.type='button';
+      var qty = document.createElement('span'); qty.className='art-qty'; qty.textContent=qtys[k]||0;
+      if((qtys[k]||0)>0) qty.style.color='var(--chip-green)';
+      var btnP = document.createElement('button'); btnP.className='art-btn'; btnP.textContent='+'; btnP.type='button';
+      btnM.addEventListener('click',function(e){e.stopPropagation();if(qtys[k]>0){qtys[k]--;onChange(serializeArticoli(qtys));render();}});
+      btnP.addEventListener('click',function(e){e.stopPropagation();qtys[k]++;onChange(serializeArticoli(qtys));render();});
+      ctrl.appendChild(btnM);ctrl.appendChild(qty);ctrl.appendChild(btnP);
+      row.appendChild(lbl);row.appendChild(ctrl);
+      return row;
+    }
+
+    function makeColTitle(text){
+      var t=document.createElement('div');
+      t.className='art-col-title';
+      t.textContent=text;
+      return t;
+    }
+
+    // Due colonne principali
     var picker = document.createElement('div');
     picker.className = 'art-picker';
 
-    function makeCol(title, items) {
-      var col = document.createElement('div');
-      col.className = 'art-col';
-      var t = document.createElement('div');
-      t.className = 'art-col-title';
-      t.textContent = title;
-      col.appendChild(t);
-      items.forEach(function(k) {
-        var row = document.createElement('div');
-        row.className = 'art-row';
-        var lbl = document.createElement('span');
-        lbl.className = 'art-label';
-        lbl.textContent = k;
-        var ctrl = document.createElement('div');
-        ctrl.className = 'art-ctrl';
-        var btnM = document.createElement('button');
-        btnM.className = 'art-btn'; btnM.textContent = '−'; btnM.type = 'button';
-        var qty = document.createElement('span');
-        qty.className = 'art-qty';
-        qty.textContent = qtys[k] || 0;
-        if ((qtys[k] || 0) > 0) qty.style.color = 'var(--chip-green)';
-        var btnP = document.createElement('button');
-        btnP.className = 'art-btn'; btnP.textContent = '+'; btnP.type = 'button';
-        btnM.addEventListener('click', function(e) {
-          e.stopPropagation();
-          if (qtys[k] > 0) { qtys[k]--; onChange(serializeArticoli(qtys)); render(); }
-        });
-        btnP.addEventListener('click', function(e) {
-          e.stopPropagation();
-          qtys[k]++; onChange(serializeArticoli(qtys)); render();
-        });
-        ctrl.appendChild(btnM); ctrl.appendChild(qty); ctrl.appendChild(btnP);
-        row.appendChild(lbl); row.appendChild(ctrl);
-        col.appendChild(row);
-      });
-      return col;
-    }
-    picker.appendChild(makeCol('Tramezzini', TRAMEZZINI));
-    picker.appendChild(makeCol('Grantostati', GRANTOSTATI.concat(VELINE)));
+    var colT = document.createElement('div'); colT.className='art-col';
+    colT.appendChild(makeColTitle('Tramezzini'));
+    TRAMEZZINI.forEach(function(k){ colT.appendChild(makeRow(k)); });
+    picker.appendChild(colT);
+
+    var colG = document.createElement('div'); colG.className='art-col';
+    colG.appendChild(makeColTitle('Grantostati'));
+    GRANTOSTATI.forEach(function(k){ colG.appendChild(makeRow(k)); });
+    picker.appendChild(colG);
+
     container.appendChild(picker);
+
+    // Veline: sezione separata sotto
+    var velSec = document.createElement('div');
+    velSec.style.marginTop='8px';
+    velSec.appendChild(makeColTitle('Veline'));
+    var velRow = document.createElement('div');
+    velRow.style.cssText='display:flex;gap:12px;';
+    VELINE.forEach(function(k){
+      var row=makeRow(k);
+      row.style.flex='1';
+      velRow.appendChild(row);
+    });
+    velSec.appendChild(velRow);
+    container.appendChild(velSec);
   }
   render();
 }
+
 
 function buildChipPicker(containerId, opts, currentVal, accentColor, accentBg, onSelect) {
   var container = document.getElementById(containerId);
@@ -1342,11 +1354,13 @@ function openShipmentModal(editId){
 // ── EXPORT ORDERS ─────────────────────────────────────────────────────────
 function openExport(rows,title){
   document.getElementById('extit').textContent=title;
-  var hdr=['Azienda','Nome Locale','Luogo Consegna','Articoli','Sigilli','Omaggio','Note'];
-  var txt=[hdr].concat(rows.map(function(o){return[
+  var hdr=['Azienda','Nome Locale','Luogo Consegna','Articoli','Sigilli','Note'];
+  var txt=[hdr].concat(rows.map(function(o){
+    var art=(o.merce||'')+(o.omaggio?(((o.merce&&o.merce.trim())?'+':'')+o.omaggio+' OMAGGIO'):'');
+    return[
     USERS[o.userId]?USERS[o.userId].label:o.userId,
-    o.locale, o.luogo, o.merce,
-    o.sigilli||'', o.omaggio||'', o.note||''
+    o.locale, o.luogo, art,
+    o.sigilli||'', o.note||''
   ];})).map(function(r){return r.join('\t');}).join('\n');
   document.getElementById('exta').value=txt;
   var cb=document.getElementById('cpbtn');cb.textContent='📋 Copia negli appunti';
@@ -1356,19 +1370,19 @@ function openExport(rows,title){
 
 // ── EXPORT SHIPMENTS ──────────────────────────────────────────────────────
 function exportShipments(rows){
-  var hdr=['Azienda','Nome Locale','Luogo Spedizione','Canale','Articoli','Sigilli','Pagamento','Proforma','Fattura','Pagato','Avviso','Etichetta','Pronto','Spedito','Omaggio','Note'];
+  var hdr=['Azienda','Nome Locale','Luogo Spedizione','Canale','Articoli','Sigilli','Pagamento','Proforma','Fattura','Pagato','Avviso','Etichetta','Pronto','Spedito','Note'];
   var txt=[hdr].concat(rows.map(function(s){
     return[
       USERS[s.userId]?USERS[s.userId].label:s.userId,
       s.locale,
       s.luogo||'',
       s.canale||'',
-      s.merce,
+      (s.merce||'')+((s.omaggio&&s.omaggio.trim())?((s.merce&&s.merce.trim())?' + ':'')+s.omaggio+' OMAGGIO':''),
       s.sigilli||'',
       s.pagamento||'',
       s.proforma?'X':'',s.fattura?'X':'',s.pagato?'X':'',
       s.avviso?'X':'',s.etichetta?'X':'',s.pacco?'X':'',s.spedito?'X':'',
-      s.omaggio||'',s.note||''
+      s.note||''
     ];
   })).map(function(r){return r.join('\t');}).join('\n');
   document.getElementById('extit').textContent='Esporta Spedizioni';
